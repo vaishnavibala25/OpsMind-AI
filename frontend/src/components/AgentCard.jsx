@@ -1,18 +1,25 @@
-function AgentCard({title,content}) {
+function AgentCard({ title, content }) {
 
   return (
+
     <div
       style={{
-        border:"1px solid gray",
-        padding:"15px",
-        margin:"15px",
-        borderRadius:"10px"
+        border: "1px solid #ddd",
+        padding: "15px",
+        marginTop: "15px",
+        borderRadius: "10px"
       }}
     >
 
-      <h2>{title}</h2>
+      <h3>{title}</h3>
 
-      <p>{content}</p>
+      <pre
+        style={{
+          whiteSpace: "pre-wrap"
+        }}
+      >
+        {content}
+      </pre>
 
     </div>
   );

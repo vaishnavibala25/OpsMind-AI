@@ -1,18 +1,20 @@
 import mongoose from "mongoose";
 
-const incidentSchema = new mongoose.Schema({
+const incidentSchema = new mongoose.Schema(
+{
+  incident: String,
+  network: String,
+  database: String,
+  security: String,
+  application: String,
+  finalReport: String
+},
+{
+  timestamps: true
+}
+);
 
-    description:{
-        type:String,
-        required:true
-    },
-
-    analysis:{
-        type:String
-    }
-
-},{
-    timestamps:true
-});
-
-export default mongoose.model("Incident",incidentSchema);
+export default mongoose.model(
+  "Incident",
+  incidentSchema
+);

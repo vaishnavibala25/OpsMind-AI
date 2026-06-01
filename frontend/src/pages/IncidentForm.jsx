@@ -4,30 +4,32 @@ import AgentCard from "../components/AgentCard";
 
 function IncidentForm() {
 
-  const [incident,setIncident] = useState("");
-  const [result,setResult] = useState(null);
-  const [loading,setLoading] = useState(false);
+const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+  const [result, setResult] = useState(null);
 
-  const handleSubmit = async() => {
+  const [loading, setLoading] = useState(false);
 
-    setLoading(true);
+  const handleSubmit = async () => {
 
-    try{
+    try {
+
+      setLoading(true);
 
       const response = await API.post(
-        "/incidents/analyze",
-        {
-          incident
-        }
-      );
-
+  "/incidents/analyze",
+  {
+    title,
+    description
+  }
+);
       setResult(response.data);
 
-    }catch(error){
+    } catch (error) {
 
       console.log(error);
 
-    }finally{
+    } finally {
 
       setLoading(false);
 
@@ -35,28 +37,47 @@ function IncidentForm() {
   };
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
 
-      <textarea
-        rows="8"
-        cols="70"
-        placeholder="Enter Incident..."
-        value={incident}
-        onChange={(e)=>setIncident(e.target.value)}
-      />
+      <h1>OpsMind AI</h1>
 
-      <br/>
+      <input
+  type="text"
+  placeholder="Incident Title"
+  value={title}
+  onChange={(e) => setTitle(e.target.value)}
+  style={{
+    width: "600px",
+    padding: "10px"
+  }}
+/>
+
+<br />
+<br />
+
+<textarea
+  rows="8"
+  cols="80"
+  placeholder="Incident Description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+/>
+
+      <br />
+      <br />
 
       <button onClick={handleSubmit}>
-        Analyze Incident
+
+        {loading
+          ? "Analyzing..."
+          : "Analyze Incident"}
+
       </button>
 
-      {loading && (
-        <h3>Analyzing...</h3>
-      )}
-
       {result && (
+
         <>
+
           <AgentCard
             title="Network Agent"
             content={result.network}
@@ -78,9 +99,10 @@ function IncidentForm() {
           />
 
           <AgentCard
-            title="Final Report"
+            title="Manager Report"
             content={result.finalReport}
           />
+
         </>
       )}
 

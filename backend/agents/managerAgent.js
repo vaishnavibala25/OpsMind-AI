@@ -5,7 +5,7 @@ export const managerPrompt = (
   security,
   application
 ) => `
-You are an Incident Commander.
+You are a Senior Incident Manager.
 
 Incident:
 ${incident}
@@ -22,10 +22,35 @@ ${security}
 Application Analysis:
 ${application}
 
-Provide:
+Provide a final report with the following sections:
 
-1. Root Cause
-2. Impact
-3. Recommended Actions
-4. Final Confidence Score
+1. Severity Classification
+   - Low
+   - Medium
+   - High
+   - Critical
+
+2. Root Cause
+
+3. Impact
+
+4. Recommended Actions
+
+5. Confidence Score (0-100%)
+
+Format exactly like:
+
+Severity: Critical
+
+Root Cause:
+...
+
+Impact:
+...
+
+Recommended Actions:
+...
+
+Confidence Score:
+85%
 `;

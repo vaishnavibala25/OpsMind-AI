@@ -1,3 +1,5 @@
+import Incident from "../models/Incident.js";
+
 import { askAI } from "../services/openaiService.js";
 
 import { networkPrompt } from "../agents/networkAgent.js";
@@ -8,33 +10,70 @@ import { managerPrompt } from "../agents/managerAgent.js";
 
 export const analyzeIncident = async (req, res) => {
   try {
-    const { incident } = req.body;
+   const { title, description } = req.body;
 
     console.log("Request received");
-    console.log(incident);
+    console.log(description);
 
     console.log("Calling Network Agent...");
-    const network = await askAI(networkPrompt(incident));
+    const network = await askAI(networkPrompt(description));
 
     console.log("Calling Database Agent...");
-    const database = await askAI(databasePrompt(incident));
+    const database = await askAI(databasePrompt(description));
 
     console.log("Calling Security Agent...");
-    const security = await askAI(securityPrompt(incident));
+    const security = await askAI(securityPrompt(description));
 
     console.log("Calling Application Agent...");
-    const application = await askAI(applicationPrompt(incident));
+    const application = await askAI(applicationPrompt(description));
 
     console.log("Calling Manager Agent...");
+
+
+
+
     const finalReport = await askAI(
       managerPrompt(
-        incident,
+       description,
         network,
         database,
         security,
         application
       )
     );
+
+
+    await Incident.create({
+title,
+ description,
+
+  network,
+
+  database,
+
+  security,
+
+  application,
+
+  finalReport
+
+});
+
+const severityPrompt = `
+Classify this incident severity.
+
+Incident:
+${description}
+
+Return ONLY one word:
+
+Low
+Medium
+High
+Critical
+`;
+
+const severity = await askAI(severityPrompt);
 
     res.status(200).json({
       success: true,
@@ -47,11 +86,14 @@ export const analyzeIncident = async (req, res) => {
 
   } catch (error) {
     console.error("Incident Analysis Error:", error);
-
-    res.status(500).json({
-      success: false,
-      message: "Failed to analyze incident",
-      error: error.message
-    });
+res.json({
+  success: true,
+  severity,
+  network,
+  database,
+  security,
+  application,
+  finalReport
+});
   }
 };
