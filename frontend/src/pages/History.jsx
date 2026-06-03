@@ -1,59 +1,73 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
-function History() {
-
+export default function History() {
   const [incidents, setIncidents] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-
-    fetchIncidents();
-
+    fetchHistory();
   }, []);
 
-  const fetchIncidents = async () => {
+  const fetchHistory = async () => {
+    const res = await API.get("/incidents/history");
 
-    try {
+    const data = Array.isArray(res.data)
+      ? res.data
+      : res.data?.data || [];
 
-      const response =
-        await API.get("/incidents");
-
-      setIncidents(response.data);
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
+    setIncidents(data);
   };
 
   return (
-    <div>
+    <div style={styles.page}>
+      <h1>📜 Incident History</h1>
 
-      <h1>Incident History</h1>
-
-      {incidents.map((item) => (
-
+      {incidents.map((inc) => (
         <div
-          key={item._id}
-          style={{
-            border: "1px solid gray",
-            padding: "15px",
-            marginBottom: "10px"
-          }}
+          key={inc._id}
+          style={styles.card}
+          onClick={() => navigate(`/incident/${inc._id}`)}
         >
+          <h3>{inc.title}</h3>
 
-          <h3>{item.title}</h3>
+          <p>
+            Severity: {inc.severity}
+          </p>
 
-          <p>{item.description}</p>
+          <p>
+            Root Cause:
+            {" "}
+            {inc.rootCause?.primary}
+          </p>
 
+          <p>
+            Created:
+            {" "}
+            {new Date(
+              inc.createdAt
+            ).toLocaleString()}
+          </p>
         </div>
-
       ))}
-
     </div>
   );
 }
 
-export default History;
+const styles = {
+  page:{
+    minHeight:"100vh",
+    background:"#081224",
+    color:"white",
+    padding:"20px"
+  },
+
+  card:{
+    background:"#0f1c35",
+    padding:"20px",
+    marginBottom:"15px",
+    borderRadius:"10px",
+    cursor:"pointer"
+  }
+};

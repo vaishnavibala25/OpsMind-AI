@@ -1,23 +1,18 @@
 import Incident from "../models/Incident.js";
 
-export const getIncidents =
-async (req,res)=>{
+export const getIncidents = async (req, res) => {
+  try {
 
-try{
+    const incidents = await Incident.find()
+      .sort({ createdAt: -1 });
 
-const incidents =
-await Incident.find()
-.sort({createdAt:-1});
+    res.status(200).json(incidents);
 
-res.json(incidents);
+  } catch (error) {
 
-}
-catch(error){
+    res.status(500).json({
+      message: error.message
+    });
 
-res.status(500).json({
-message:error.message
-});
-
-}
-
+  }
 };

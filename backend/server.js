@@ -6,7 +6,7 @@ import connectDB from "./config/db.js";
 
 import incidentRoutes
 from "./routes/incidentRoutes.js";
-
+import authRoutes from "./routes/authRoutes.js";
 dotenv.config();
 
 const app=express();
@@ -21,6 +21,8 @@ app.use(
 "/api/incidents",
 incidentRoutes
 );
+app.use("/api/auth", authRoutes);
+
 
 app.listen(
 process.env.PORT,

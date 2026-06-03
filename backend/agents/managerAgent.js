@@ -1,56 +1,62 @@
 export const managerPrompt = (
-  incident,
+  description,
   network,
   database,
   security,
   application
 ) => `
-You are a Senior Incident Manager.
+You are a Senior SOC Incident Manager.
 
-Incident:
-${incident}
+Analyze all agents and produce a structured incident report.
 
-Network Analysis:
-${network}
+INPUT:
+${description}
 
-Database Analysis:
-${database}
+Network: ${JSON.stringify(network)}
+Database: ${JSON.stringify(database)}
+Security: ${JSON.stringify(security)}
+Application: ${JSON.stringify(application)}
 
-Security Analysis:
-${security}
+RULES:
+- Use confidenceScore to rank causes
+- Highest confidence = PRIMARY ROOT CAUSE
+- Second highest = CONTRIBUTING CAUSE
+- Others = secondary signals
 
-Application Analysis:
-${application}
+OUTPUT MUST BE STRICT JSON:
 
-Provide a final report with the following sections:
-
-1. Severity Classification
-   - Low
-   - Medium
-   - High
-   - Critical
-
-2. Root Cause
-
-3. Impact
-
-4. Recommended Actions
-
-5. Confidence Score (0-100%)
-
-Format exactly like:
-
-Severity: Critical
-
-Root Cause:
-...
-
-Impact:
-...
-
-Recommended Actions:
-...
-
-Confidence Score:
-85%
+{
+  "rootCause": {
+    "primary": "slow queries due to missing indexes",
+    "contributing": [
+      "connection pool exhaustion",
+      "API inefficiencies"
+    ]
+  },
+  "severity": "High",
+  "impact": {
+    "technical": [
+      "increased API response time",
+      "timeouts"
+    ],
+    "business": [
+      "user dissatisfaction",
+      "potential revenue loss"
+    ]
+  },
+  "risk": {
+    "shortTerm": [
+      "service degradation"
+    ],
+    "longTerm": [
+      "loss of users",
+      "SLA violations"
+    ]
+  },
+  "recommendation": [
+    "optimize database queries",
+    "add indexing",
+    "monitor connection pool"
+  ]
+}
 `;

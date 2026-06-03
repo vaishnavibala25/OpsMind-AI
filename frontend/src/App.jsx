@@ -1,32 +1,85 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Landing from "./pages/Landing";
+import Analytics from "./pages/Analytics";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
 
 import IncidentForm from "./pages/IncidentForm";
-import Dashboard from "./pages/Dashboard";
-import Navbar from "./components/Navbar";
+import History from "./pages/History";
+import IncidentDetails from "./pages/IncidentDetails";
 
-function App() {
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+export default function App() {
   return (
     <BrowserRouter>
-
-  <Navbar />
       <Routes>
+<Route path="/register" element={<Signup />} />
+<Route
+  path="/incident/:id"
+  element={
+    <ProtectedRoute>
+      <div className="app">
+        <Navbar />
+        <IncidentDetails />
+      </div>
+    </ProtectedRoute>
+  }
+/>
+ <Route
+          path="/analytics"
+          element={<ProtectedRoute><div className="app"><Navbar/><Analytics/></div></ProtectedRoute>}
+        />
 
+        {/* PUBLIC ROUTE */}
+        <Route path="/login" element={<Login />} />
+
+        {/* DEFAULT REDIRECT */}
+        <Route path="/" element={<Landing />} />
+
+        
+
+        {/* PROTECTED ROUTES */}
         <Route
-          path="/"
-          element={<Dashboard />}
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <div className="app">
+                <Navbar />
+                <Dashboard />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+
+  
+        <Route
+          path="/incident"
+          element={
+            <ProtectedRoute>
+              <div className="app">
+                <Navbar />
+                <IncidentForm />
+              </div>
+            </ProtectedRoute>
+          }
         />
 
         <Route
-          path="/analyze"
-          element={<IncidentForm />}
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <div className="app">
+                <Navbar />
+                <History />
+              </div>
+            </ProtectedRoute>
+          }
         />
 
       </Routes>
-
-      
-
     </BrowserRouter>
   );
 }
-
-export default App;
