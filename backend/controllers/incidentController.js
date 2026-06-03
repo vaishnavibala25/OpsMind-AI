@@ -1,4 +1,4 @@
-import Incident from "../models/Incident.js";
+import Incident from "../models/incident.js";
 
 import { askAI } from "../services/openaiService.js";
 
