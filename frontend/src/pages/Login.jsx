@@ -24,9 +24,9 @@ export default function Login() {
 
       navigate("/incident");
     } catch (err) {
-      console.log(err);
-      alert("Login failed");
-    }
+  console.log("ERROR:", err.response?.data);
+  alert(err.response?.data?.message || "Login failed");
+}
   };
 
   return (
